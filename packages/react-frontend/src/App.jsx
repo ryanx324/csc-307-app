@@ -22,7 +22,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>This is my new test text. My name is Ryan Nguyen</code> and save to test HMR
+          Edit <code>This is my new test text. YOLO</code> and save to test HMR
         </p>
       </div>
       <p className="read-the-docs">
