@@ -23,24 +23,7 @@ import Form from "./Form"; //Load in Form
 // ];
 
 function MyApp() { // React Component // Pass the data to the "Table" child component
-    // const [characters, setCharacters] = useState([
-    //     {
-    //         name: "Charlie",
-    //         job: "Janitor"
-    //     },
-    //     {
-    //         name: "Mac",
-    //         job: "Bouncer"
-    //     },
-    //     {
-    //         name: "Dee",
-    //         job: "Aspiring actress"
-    //     },
-    //     {
-    //         name: "Dennis",
-    //         job: "Bartender"
-    //     }
-    // ]);
+    const [characters, setCharacters] = useState([]);
 
     function removeOneCharacter(index){
         const updated = characters.filter((character, i) => {
@@ -49,13 +32,17 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
         setCharacters(updated);
     }
 
+    function updateList(person){
+        setCharacters([...characters, person]);
+    }
+
   return (
     <div className="container">
       <Table 
         characterData={characters} 
         removeCharacter={removeOneCharacter}
       /> 
-      <Form />
+      <Form handleSubmit={updateList} />
     </div>
   );
 }
