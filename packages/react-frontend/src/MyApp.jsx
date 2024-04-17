@@ -34,11 +34,27 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
     }
 
     function updateList(person){
-        setCharacters([...characters, person]);
+        postUser(person)
+          .then(() => setCharacters([...characters, person]))
+          .catch((error) => {
+            console.log(error);
+          })
     }
 
     function fetchUsers(){
       const promise = fetch("http://localhost:8000/users");
+      return promise;
+    }
+
+    function postUser(person){
+      const promise = fetch("http://localhost:8000/users",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(person),
+      });
       return promise;
     }
 
@@ -47,7 +63,7 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
             .then((res) => res.json()) // json format
             .then((json) => setCharacters(json["users_list"])) // call setCharacters
             .catch((error) => {console.log(error);}); // error resolving
-    }, []);
+    }, [] );
 
   return (
     <div className="container">
