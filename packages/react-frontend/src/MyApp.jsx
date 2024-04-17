@@ -1,7 +1,8 @@
 // src/MyApp.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Add in useEffect
 import Table from "./Table"; // Load Table in
 import Form from "./Form"; //Load in Form
+
 // //Props /*The data was contained as a constant*/
 // const characters = [ 
 //     {
@@ -35,6 +36,18 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
     function updateList(person){
         setCharacters([...characters, person]);
     }
+
+    function fetchUsers(){
+      const promise = fetch("http://localhost:8000/users");
+      return promise;
+    }
+
+    useEffect(() => {
+      fetchUsers()
+            .then((res) => res.json()) // json format
+            .then((json) => setCharacters(json["users_list"])) // call setCharacters
+            .catch((error) => {console.log(error);}); // error resolving
+    }, []);
 
   return (
     <div className="container">
