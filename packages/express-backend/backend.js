@@ -77,20 +77,43 @@ const addUser = (user) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.send();
+  res.status(201).send("Successfully posted user");
 });
 
 app.delete("/users", (req, res) => {
-  const id = req.body;
-  let userToDelete= findUserById(id);
-  if(userToDelete === undefined){
+  const { id } = req.body;
+  const userToDelete = findUserById(id);
+  if (userToDelete === undefined) {
     res.status(404).send("Resource not found.");
-  }else{
-    const index = users.users_list.findIndex(user => user.id);
+  } else {
+    const index = users.users_list.findIndex(user => user.id === id); // Corrected findIndex usage
     users.users_list.splice(index, 1);
-    res.send(result);
+    res.status(201).send("User deleted successfully");
   }
 });
+
+const findUserByNameAndJob = (name, job) => {
+  return users["users_list"].filter(
+      (user) => user["name"] === name && user["job"] === job
+  );
+};
+
+app.get("/users", (req, res) => {
+  const { name, job } = req.query; // access query args
+  if (name && job) {
+      let result = findUserByNameAndJob(name, job);
+      result = { users_list: result };
+      res.send(result);
+  } else if (name) {
+      let result = findUserByName(name);
+      result = { users_list: result };
+      res.send(result);
+  } else {
+      res.send(users);
+  }
+});
+
+
 
 app.get("/", (req, res) => { // set up first API endpoint (URL Pattern) (request, response)
   res.send("Hello World!");
