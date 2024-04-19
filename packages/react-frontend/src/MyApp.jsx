@@ -26,15 +26,30 @@ import Form from "./Form"; //Load in Form
 function MyApp() { // React Component // Pass the data to the "Table" child component
     const [characters, setCharacters] = useState([]);
 
-    function removeOneCharacter(index){
-        const updated = characters.filter((character, i) => {
-            return i !== index;
-        });
-        setCharacters(updated);
-    }
+    // function removeOneCharacter(index){
+    //     const updated = characters.filter((character, i) => {
+    //         return i !== index;
+    //     });
+    //     setCharacters(updated);
+    // }  
 
+    function removeOneCharacter(index) {
+      const UserIDtoRemove = characters[index].id; 
+      fetch(`http://localhost:8000/users/${UserIDtoRemove}`, {
+        method: 'DELETE' // use method for DELETE
+      })
+      .then(res => {
+        if (res.status === 204){ // status for successful req 
+          const updated = characters.filter((character, i) => i !== index);
+          setCharacters(updated); 
+        } 
+      })
+      .catch(error => console.error('Error deleting user:', error)); // Error if user cant be deleted
+    }
+    
     function updateList(person){
         postUser(person)
+          .then(res => res.json())
           .then(() => setCharacters([...characters, person]))
           .catch((error) => {
             console.log(error);

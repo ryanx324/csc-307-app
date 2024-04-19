@@ -56,6 +56,15 @@ const users = {
 //     }
 // });
 
+const generateID = () => {
+  const IDchars = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+  let id = '';
+  for (let i = 0; i < 6; i++) {
+    id += IDchars.charAt(Math.floor(Math.random() * IDchars.length));
+  }
+  return id;
+};
+
 const findUserById = (id) =>
 users["users_list"].find((user) => user["id"] === id);
 
@@ -70,27 +79,45 @@ app.get("/users/:id", (req, res) => {
 });
 
 const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
+  const newUser = {...user, id: generateID()};
+  users.users_list.push(newUser);
+  return newUser;
 };
   
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.status(201).send("Successfully posted user");
+  const newUser = addUser(userToAdd);
+  const newUserResp = {
+    id: newUser.id,
+    ...newUser
+  };
+  res.status(201).json(newUserResp);
 });
 
-app.delete("/users", (req, res) => {
-  const { id } = req.body;
+// app.delete("/users", (req, res) => {
+//   const { id } = req.body;
+//   const userToDelete = findUserById(id);
+//   if (userToDelete === undefined) {
+//     res.status(404).send("Resource not found.");
+//   } else {
+//     const index = users.users_list.findIndex(user => user.id === id); // Corrected findIndex usage
+//     users.users_list.splice(index, 1);
+//     res.status(201).send(users);
+//   }
+// });
+
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
   const userToDelete = findUserById(id);
-  if (userToDelete === undefined) {
+  if (!userToDelete) {
     res.status(404).send("Resource not found.");
   } else {
-    const index = users.users_list.findIndex(user => user.id === id); // Corrected findIndex usage
+    const index = users.users_list.findIndex(user => user.id === id);
     users.users_list.splice(index, 1);
-    res.status(201).send("User deleted successfully");
+    res.status(204).send(); // Respond with 204 No Content for successful deletion
   }
 });
+
 
 const findUserByNameAndJob = (name, job) => {
   return users["users_list"].filter(
@@ -113,15 +140,13 @@ app.get("/users", (req, res) => {
   }
 });
 
-
-
 app.get("/", (req, res) => { // set up first API endpoint (URL Pattern) (request, response)
   res.send("Hello World!");
 });
 
-app.get("/users", (req, res) => {
-    res.send(users);
-});
+// app.get("/users", (req, res) => {
+//     res.send(users);
+// });
 
 app.listen(port, () => {
   console.log(
