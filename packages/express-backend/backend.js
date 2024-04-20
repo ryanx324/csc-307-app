@@ -114,12 +114,12 @@ app.delete("/users/:id", (req, res) => {
   } else {
     const index = users.users_list.findIndex(user => user.id === id);
     users.users_list.splice(index, 1);
-    res.status(204).send(); // Respond with 204 No Content for successful deletion
+    res.status(204).send(); 
   }
 });
 
 
-const findUserByNameAndJob = (name, job) => {
+const findUserByNameAndJob = (name, job) => { // function for finding users with the same name and job
   return users["users_list"].filter(
       (user) => user["name"] === name && user["job"] === job
   );

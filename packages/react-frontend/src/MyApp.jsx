@@ -49,8 +49,14 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
     
     function updateList(person){
         postUser(person)
-          .then(res => res.json())
-          .then(() => setCharacters([...characters, person]))
+          .then(res => {
+            if(res.status === 201){
+              return res.json();
+            }
+          })
+          .then(newPerson => {
+            setCharacters([...characters, newPerson]);
+          })
           .catch((error) => {
             console.log(error);
           })
