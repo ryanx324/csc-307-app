@@ -34,7 +34,7 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
     // }  
 
     function removeOneCharacter(index) {
-      const UserIDtoRemove = characters[index].id; 
+      const UserIDtoRemove = characters[index]._id; 
       fetch(`http://localhost:8000/users/${UserIDtoRemove}`, {
         method: 'DELETE' // use method for DELETE
       })
@@ -82,7 +82,7 @@ function MyApp() { // React Component // Pass the data to the "Table" child comp
     useEffect(() => {
       fetchUsers()
             .then((res) => res.json()) // json format
-            .then((json) => setCharacters(json["users_list"])) // call setCharacters
+            .then((json) => setCharacters(json["users_list"].map(user => ({ ...user, id: user._id})))) // call setCharacters
             .catch((error) => {console.log(error);}); // error resolving
     }, [] );
 
